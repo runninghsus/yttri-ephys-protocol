@@ -52,6 +52,8 @@ Then, ask for a partition within the GPU-shared resource.
 ```commandline
 interact -p GPU-shared --gres=gpu:v100-32:1 -t 08:00:00
 ```
+
+
 The `-t 08:00:00` is asking for shared node for up to <span style="color:orange;font-weight:350;font-size:18px">
      8 hours
 </span>
@@ -70,9 +72,51 @@ MATLAB 2022b will pop up and allow you to run kilosort like you would on a norma
 Once kilosort3 is finished, we can transfer the processed files back to `Z:\ ` to manual sort the neurons.
 
 ##### Step 3.1: Network drive log in
+Same as Step 1.1. Open windows powershell and log into network drive `Z:\ `.
+
+![](./tmp/win_powershell.png)
+
+##### Step 3.2: Transfer processed folder from PSC bridges2 back to network drive
+Once logged in, you will be in `Z:\ ` directory. To transfer the file from PSC back to `Z:\ `:
+
+```commandline
+scp -r yttri@data.bridges.psc.edu:/ocean/projects/bio210065p/yttri/AE2_Training/072423_processed/ ./AE2_Training/
+```
 
 
+##### Step 3.3: Edit the params.py file.
+Use notepad or whatever program that can read the file.
+Change the path prefix from `/ocean/projects/bio210065p/yttri/YOUR/PROCESSED/FOLDER` to `Z:/YOUR/PROCESSED/FOLDER` 
+for example:
+Change
+```
+dat_path = '/ocean/projects/bio210065p/yttri/AE2_Training/072423_processed/temp_wh.dat'
+```
+to
+```
+dat_path = 'Z:/AE2_Training/072423_processed/temp_wh.dat'
+```
 
+##### Step 3.4: Run Phy2
+Open anaconda3 terminal on Wartooth, and activate preinstalled environment.
+```commandline
+conda activate phy2
+```
+
+Then go to the processed folder directory on `Z:\ `
+```commandline
+pushd Z:/AE2_Training/072423_processed/
+```
+
+You can either use the saved settings from last time:
+```commandline
+phy template-gui params.py
+```
+
+Or use the default settings:
+```commandline
+phy template-gui params.py --clear-cache --clear-state --debug
+```
 
 
 
